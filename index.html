@@ -32,47 +32,59 @@
     <script src="js/hc-canvas-luckwheel.js"></script>
     <script>
       var isPercentage = true;
+      // Đây là nơi chỉnh phần thưởng: 1 phần thưởng gồm 4 elenment:
+      /*
+       {
+        text: Type: String -> tên phần thưởng hiển thị
+        img:  Type: String -> đường dẫn đến hỉnh ảnh hiển thị
+              !Note!: hình ảnh được đặt trong thư mục images và được sử dụng theo cú pháp 'image/file hình ảnh'
+        number: Type: number -> số lượng phần quà. 
+                !Note!: Vì để tránh quay trùng những phần quà đã hết thì cứ mỗi lần quay trúng thì phần số lượng sẽ giảm 1 cái. Đến khi number = 0 thì nó sẽ không trúng vào phần quà này nữa.
+        percentage: Type: number -> tỉ lệ trúng giải.
+                    !Note!: Tổng của phần percentage phải bằng 1
+      }
+      */
       var prizes = [
         {
           text: "Móc khóa BKDN Techshow",
           img: "images/1.png",
           number: 31,
-          percentpage: 0.31,
+          percentage: 0.31,
         },
         {
           text: "USB",
           img: "images/2.png",
           number: 2,
-          percentpage: 0.02,
+          percentage: 0.02,
         },
         {
           text: "Cây bút",
           img: "images/3.png",
           number: 20,
-          percentpage: 0.2,
+          percentage: 0.2,
         },
         {
           text: "Mũ bảo hiểm",
           img: "images/4.png",
           number: 2,
-          percentpage: 0.02,
+          percentage: 0.02,
         },
         {
           text: "Phong Kẹo",
           img: "images/5.png",
           number: 10,
-          percentpage: 0.1,
+          percentage: 0.1,
         },
         {
           text: "Mũ bảo hiểm",
           img: "images/6.png",
           number: 1,
-          percentpage: 0.01,
+          percentage: 0.01,
         },
         {
           text: "Chúc bạn may mắn lần sau",
           img: "images/miss.png",
-          percentpage: 0.34,
+          percentage: 0.34,
         },
       ];
       document.addEventListener(
@@ -119,55 +131,69 @@
           }
           let rand = Math.random();
           let prizeIndex = null;
-          console.log(rand);
+
+          /*
+          Đây là nơi điều chỉnh logic vòng quay.
+          Từ mảng Prize ta có Prize.length phần tử
+          Tham số rand là số ngẫu nhiêu từ 0 - 1 được tạo từ hàm Math.random()
+          Tham số prizeIndex chính là vị trí quà trong mảng prize
+          Nguyên lí hoạt động là so sánh tham số rand với tham số percentage trong mỗi phần tử ở trong mảng prize
+          Đầu tiêu: so sánh rand với prize[prize.length - 1].percentage 
+            -> nếu rand < prize[prize.length - 1].percentage thì prizeIndex = prize.length - 1. 
+            -> Ngược lại thì so sánh prize[prize.length - 1].percentage + prize[prize.length - 2].percentage
+              -> nếu rand < prize[prize.length - 2].percentage thì prizeIndex = prize.length - 2. 
+              Cứ tiếp tục đến khi prize.length - i = 0 thì kết thúc
+           */
+
           switch (true) {
-            case rand < prizes[6].percentpage:
+            case rand < prizes[6].percentage:
               prizeIndex = 6;
               break;
-            case rand < prizes[6].percentpage + prizes[5].percentpage:
+            case rand < prizes[6].percentage + prizes[5].percentage:
               prizeIndex = 5;
               break;
             case rand <
-              prizes[6].percentpage +
-                prizes[5].percentpage +
-                prizes[4].percentpage:
+              prizes[6].percentage +
+                prizes[5].percentage +
+                prizes[4].percentage:
               prizeIndex = 4;
               break;
             case rand <
-              prizes[6].percentpage +
-                prizes[5].percentpage +
-                prizes[4].percentpage +
-                prizes[3].percentpage:
+              prizes[6].percentage +
+                prizes[5].percentage +
+                prizes[4].percentage +
+                prizes[3].percentage:
               prizeIndex = 3;
               break;
             case rand <
-              prizes[6].percentpage +
-                prizes[5].percentpage +
-                prizes[4].percentpage +
-                prizes[3].percentpage +
-                prizes[2].percentpage:
+              prizes[6].percentage +
+                prizes[5].percentage +
+                prizes[4].percentage +
+                prizes[3].percentage +
+                prizes[2].percentage:
               prizeIndex = 2;
               break;
             case rand <
-              prizes[6].percentpage +
-                prizes[5].percentpage +
-                prizes[4].percentpage +
-                prizes[3].percentpage +
-                prizes[2].percentpage +
-                prizes[1].percentpage:
+              prizes[6].percentage +
+                prizes[5].percentage +
+                prizes[4].percentage +
+                prizes[3].percentage +
+                prizes[2].percentage +
+                prizes[1].percentage:
               prizeIndex = 1;
               break;
             case rand <
-              prizes[6].percentpage +
-                prizes[5].percentpage +
-                prizes[4].percentpage +
-                prizes[3].percentpage +
-                prizes[2].percentpage +
-                prizes[1].percentpage +
-                prizes[0].percentpage:
+              prizes[6].percentage +
+                prizes[5].percentage +
+                prizes[4].percentage +
+                prizes[3].percentage +
+                prizes[2].percentage +
+                prizes[1].percentage +
+                prizes[0].percentage:
               prizeIndex = 0;
               break;
           }
+
           if (prizes[prizeIndex].number != 0) {
             prizes[prizeIndex].number = prizes[prizeIndex].number - 1;
             return prizeIndex;
